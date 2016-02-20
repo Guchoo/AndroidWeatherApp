@@ -1,8 +1,16 @@
 package com.guroodesneltvedt.weatherapp;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.text.SpannableString;
+import android.text.style.ImageSpan;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,26 +20,36 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.guroodesneltvedt.weatherapp.model.Weather;
+
+import org.json.JSONException;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private TextView cityText;
+    private TextView condDescr;
+    private TextView temp;
+    private TextView press;
+    private TextView windSpeed;
+    private TextView windDeg;
+    private TextView hum;
+    private ImageView imgView;
+
+    createIconResourceMap createIcon = new createIconResourceMap();
+    private SharedPreferences sharePref;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_navigation);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        new WeatherActivity();
-
-/*        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -41,6 +59,55 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        createIcon.createIconResourceMap();
+        sharePref = getSharedPreferences("cityLabel", 0);
+        if (sharePref.contains("city")){
+            String city = sharePref.getString("city", "");
+            sharePref.edit().remove("city").commit();
+            getWeather(city);
+        }
+        else{
+            startInfo();
+        }
+    }
+
+    public void startInfo(){
+        String text = "Select city in the menu by clicking @";
+        SpannableString str = new SpannableString(text);
+        int index = str.length()-1;
+        ImageSpan imagespan = new ImageSpan(this, R.drawable.ic_menu_24dp);
+        str.setSpan(imagespan, index, index +1, ImageSpan.ALIGN_BASELINE);
+
+        new AlertDialog.Builder(this)
+                .setTitle("How to start")
+                .setMessage(str)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // continue with delete
+            }
+        })
+                .setIcon(android.R.drawable.ic_dialog_info)
+                .show();
+    }
+
+
+    public void getWeather(String city) {
+
+        cityText = (TextView) findViewById(R.id.cityText);
+        condDescr = (TextView) findViewById(R.id.condDescr);
+        temp = (TextView) findViewById(R.id.temp);
+        hum = (TextView) findViewById(R.id.hum);
+        press = (TextView) findViewById(R.id.press);
+        windSpeed = (TextView) findViewById(R.id.windSpeed);
+        windDeg = (TextView) findViewById(R.id.windDeg);
+        imgView = (ImageView) findViewById(R.id.condIcon);
+
+        JSONWeatherTask task = new JSONWeatherTask();
+        task.execute(new String[]{city});
+
+        RelativeLayout rl = (RelativeLayout) findViewById(R.id.rl);
+        rl.setVisibility(View.VISIBLE);
+
     }
 
     @Override
@@ -56,7 +123,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.navigation, menu);
         return true;
     }
 
@@ -79,10 +146,69 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
+        SharedPreferences.Editor shareEdit = sharePref.edit();
+
         int id = item.getItemId();
+        String city = "";
+        if (id == R.id.nav_grimstad) {
+            city = "Grimdtad,NO";
+        } else if (id == R.id.nav_oslo) {
+            city = "Oslo,NO";
+        } else if (id == R.id.nav_bergen) {
+            city = "Bergen,NO";
+        }else if (id == R.id.nav_london) {
+            city = "London,UK";
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+        getWeather(city);
+//        shareEdit.putString("city", city);
+//        shareEdit.commit();
         return true;
+    }
+
+    private class JSONWeatherTask extends AsyncTask<String, Void, Weather> {
+
+        @Override
+        protected Weather doInBackground(String... params) {
+            Weather weather = new Weather();
+            String data = ((new WeatherHttpClient()).getWeatherData(params[0]));
+
+            try {
+                weather = JSONWeatherParser.getWeather(data);
+
+                // Retrieve the icon
+                weather.iconData = ((new WeatherHttpClient()).getImage(weather.currentCondition.getIcon()));
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return weather;
+
+        }
+
+        @Override
+        protected void onPostExecute(Weather weather) {
+            super.onPostExecute(weather);
+
+            if (weather.iconData != null && weather.iconData.length > 0) {
+                Bitmap img = BitmapFactory.decodeByteArray(weather.iconData, 0, weather.iconData.length);
+                imgView.setImageBitmap(img);
+            }
+            else {
+                Integer test = createIcon.convertOpenWeatherIconIdToResourceIconId(weather.currentCondition.getIcon());
+                imgView.setImageResource(test);
+            }
+
+            cityText.setText(weather.location.getCity() + "," + weather.location.getCountry());
+            condDescr.setText(weather.currentCondition.getCondition() + "(" + weather.currentCondition.getDescr() + ")");
+            temp.setText("" + Math.round((weather.temperature.getTemp() - 273.15)) + "\u00b0" + "C");
+            hum.setText("" + weather.currentCondition.getHumidity() + "%");
+            press.setText("" + weather.currentCondition.getPressure() + " hPa");
+            windSpeed.setText("" + weather.wind.getSpeed() + " mps");
+            windDeg.setText("" + weather.wind.getDeg() + "\u00b0");
+
+        }
     }
 }
