@@ -13,10 +13,13 @@ package com.guroodesneltvedt.weatherapp;
 
 import com.guroodesneltvedt.weatherapp.model.Location;
 import com.guroodesneltvedt.weatherapp.model.Weather;
+import com.guroodesneltvedt.weatherapp.model.WeatherForecast;
+import com.guroodesneltvedt.weatherapp.model.DayForecast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 
 
 public class JSONWeatherParser {
@@ -70,7 +73,57 @@ public class JSONWeatherParser {
 		
 		return weather;
 	}
-	
+
+	public static WeatherForecast getForecastWeather(String data) throws JSONException  {
+
+        WeatherForecast forecast = new WeatherForecast();
+
+        // We create out JSONObject from the data
+        JSONObject jObj = new JSONObject(data);
+
+        JSONArray jArr = jObj.getJSONArray("list"); // Here we have the forecast for every day
+
+        // We traverse all the array and parse the data
+        for (int i=0; i < jArr.length(); i++) {
+            int a = 0;
+            JSONObject jDayForecast = jArr.getJSONObject(a);
+
+            // Now we have the json object so we can extract the data
+            DayForecast df = new DayForecast();
+
+            // We retrieve the timestamp (dt)
+            df.timestamp = jDayForecast.getLong("dt");
+
+            // Temp is an object
+            JSONObject jTempObj = jDayForecast.getJSONObject("main");
+
+            df.forecastTemp.temp = (float) jTempObj.getDouble("temp");
+            df.forecastTemp.temp_min = (float) jTempObj.getDouble("temp_min");
+            df.forecastTemp.temp_max = (float) jTempObj.getDouble("temp_max");
+            df.forecastTemp.pressure = (float) jTempObj.getDouble("pressure");
+            df.forecastTemp.humidity = (float) jTempObj.getDouble("humidity");
+
+
+            // Pressure & Humidity
+            df.weather.currentCondition.setPressure(df.forecastTemp.pressure);
+            df.weather.currentCondition.setHumidity(df.forecastTemp.humidity);
+
+            // ...and now the weather
+            JSONArray jWeatherArr = jDayForecast.getJSONArray("weather");
+            JSONObject jWeatherObj = jWeatherArr.getJSONObject(0);
+            df.weather.currentCondition.setWeatherId(getInt("id", jWeatherObj));
+            df.weather.currentCondition.setDescr(getString("description", jWeatherObj));
+            df.weather.currentCondition.setCondition(getString("main", jWeatherObj));
+            df.weather.currentCondition.setIcon(getString("icon", jWeatherObj));
+
+            df.forecastTemp.date = jDayForecast.getString("dt_txt");
+            forecast.currentConditionForecast.setDescr(getString("description", jWeatherObj));
+
+            forecast.addForecast(df);
+        }
+
+        return forecast;
+	}
 	
 	private static JSONObject getObject(String tagName, JSONObject jObj)  throws JSONException {
 		JSONObject subObj = jObj.getJSONObject(tagName);
