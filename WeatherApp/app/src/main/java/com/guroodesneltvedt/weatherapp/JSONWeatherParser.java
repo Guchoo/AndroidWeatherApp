@@ -85,8 +85,7 @@ public class JSONWeatherParser {
 
         // We traverse all the array and parse the data
         for (int i=0; i < jArr.length(); i++) {
-            int a = 0;
-            JSONObject jDayForecast = jArr.getJSONObject(a);
+            JSONObject jDayForecast = jArr.getJSONObject(i);
 
             // Now we have the json object so we can extract the data
             DayForecast df = new DayForecast();
@@ -117,7 +116,8 @@ public class JSONWeatherParser {
             df.weather.currentCondition.setIcon(getString("icon", jWeatherObj));
 
             df.forecastTemp.date = jDayForecast.getString("dt_txt");
-            forecast.currentConditionForecast.setDescr(getString("description", jWeatherObj));
+//            forecast.currentConditionForecast.setDescr(getString("description", jWeatherObj));
+            df.forecastTemp.description = jWeatherObj.getString("description");
 
             forecast.addForecast(df);
         }

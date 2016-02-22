@@ -14,7 +14,7 @@
     android:gravity="top"
     android:background="#fbf9f9"
     android:id="@+id/rl"
-    android:visibility="visible">
+    android:visibility="invisible">
 
     <RelativeLayout
         android:id="@+id/top"
@@ -25,12 +25,13 @@
         style="?android:attr/textAppearanceMedium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:textSize="40sp" />
 
     <ImageView
         android:id="@+id/condIcon"
-        android:layout_width="70px"
-        android:layout_height="70px"
+        android:layout_width="80px"
+        android:layout_height="80px"
         android:layout_alignParentLeft="true"
         android:icon="@drawable/weather_default"
         android:layout_alignLeft="@id/cityText"
@@ -41,15 +42,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/condIcon"
-        android:layout_alignLeft="@id/condIcon" />
+        android:layout_alignLeft="@id/condIcon"
+        android:textSize="20sp"
+        android:paddingTop="20dp"/>
 
     <TextView
         android:id="@+id/temp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="12dp"
+        android:layout_marginLeft="20dp"
         android:layout_alignBaseline="@id/condDescr"
-        android:layout_toRightOf="@id/condDescr"/>
+        android:layout_toRightOf="@id/condDescr"
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/pressLab"
@@ -59,14 +63,16 @@
         android:layout_below="@id/condDescr"
         android:text="Pressure: "
         android:layout_marginTop="15dp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/press"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@id/pressLab"
-        android:layout_toRightOf="@id/pressLab" />
+        android:layout_toRightOf="@id/pressLab"
+        android:textSize="15sp" />
 
     <TextView
         android:id="@+id/humLab"
@@ -75,7 +81,8 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@id/pressLab"
         android:text="Humidity: "
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/hum"
@@ -83,7 +90,8 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@id/humLab"
         android:layout_toRightOf="@id/humLab"
-        android:layout_marginLeft="4dp" />
+        android:layout_marginLeft="4dp"
+        android:textSize="15sp" />
 
     <TextView
         android:id="@+id/windLab"
@@ -92,7 +100,8 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@id/humLab"
         android:text="Wind: "
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/windSpeed"
@@ -100,7 +109,8 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@id/windLab"
         android:layout_toRightOf="@id/windLab"
-        android:layout_marginLeft="4dp" />
+        android:layout_marginLeft="4dp"
+        android:textSize="15sp" />
 
     <TextView
         android:id="@+id/windDeg"
@@ -116,8 +126,12 @@
         android:id="@+id/table"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/top">
-        <TableRow>
+        android:layout_below="@+id/top"
+        android:paddingTop="20dp">
+        <TableRow
+            android:clickable="true"
+            android:id="@+id/row1"
+            android:onClick="onRow1Click">
             <TextView
                 android:id="@+id/dateLab"
                 android:padding="3dp"
@@ -156,7 +170,7 @@
                 android:id="@+id/descLab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Description: "
+                android:text="Details: "
                 android:padding="3dp"
                 android:layout_below="@id/windDeg"
                 android:layout_toRightOf="@+id/prevTemp"
@@ -169,6 +183,226 @@
                 android:padding="3dp"
                 android:layout_below="@id/windDeg"
                 android:layout_toRightOf="@+id/descLab" />
+        </TableRow>
+        <TableRow
+            android:clickable="true"
+            android:id="@+id/row2">
+            <TextView
+                android:id="@+id/dateLab2"
+                android:padding="3dp"
+                android:text="Date: "
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/windDeg"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/date2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/dateLab2"
+                android:padding="3dp" />
+
+            <TextView
+                android:id="@+id/tempLab2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Temp: "
+                android:padding="3dp"
+                android:layout_below="@id/windDeg"
+                android:layout_toRightOf="@+id/date2"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/prevTemp2"
+                android:padding="3dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/windDeg"
+                android:layout_toRightOf="@+id/tempLab2"/>
+
+            <TextView
+                android:id="@+id/descLab2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Details: "
+                android:padding="3dp"
+                android:layout_below="@id/windDeg"
+                android:layout_toRightOf="@+id/prevTemp2"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/desc2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="3dp"
+                android:layout_below="@id/windDeg"
+                android:layout_toRightOf="@+id/descLab2" />
+        </TableRow>
+        <TableRow
+            android:clickable="true"
+            android:id="@+id/row3">
+            <TextView
+                android:id="@+id/dateLab3"
+                android:padding="3dp"
+                android:text="Date: "
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/windDeg"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/date3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/dateLab3"
+                android:padding="3dp" />
+
+            <TextView
+                android:id="@+id/tempLab3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Temp: "
+                android:padding="3dp"
+                android:layout_below="@id/windDeg"
+                android:layout_toRightOf="@+id/date3"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/prevTemp3"
+                android:padding="3dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/windDeg"
+                android:layout_toRightOf="@+id/tempLab3"/>
+
+            <TextView
+                android:id="@+id/descLab3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Details: "
+                android:padding="3dp"
+                android:layout_below="@id/windDeg"
+                android:layout_toRightOf="@+id/prevTemp3"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/desc3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="3dp"
+                android:layout_below="@id/windDeg"
+                android:layout_toRightOf="@+id/descLab3" />
+        </TableRow>
+        <TableRow
+            android:clickable="true"
+            android:id="@+id/row4">
+            <TextView
+                android:id="@+id/dateLab4"
+                android:padding="3dp"
+                android:text="Date: "
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/windDeg"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/date4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/dateLab4"
+                android:padding="3dp" />
+
+            <TextView
+                android:id="@+id/tempLab4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Temp: "
+                android:padding="3dp"
+                android:layout_below="@id/windDeg"
+                android:layout_toRightOf="@+id/date4"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/prevTemp4"
+                android:padding="3dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/windDeg"
+                android:layout_toRightOf="@+id/tempLab4"/>
+
+            <TextView
+                android:id="@+id/descLab4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Details: "
+                android:padding="3dp"
+                android:layout_below="@id/windDeg"
+                android:layout_toRightOf="@+id/prevTemp4"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/desc4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="3dp"
+                android:layout_below="@id/windDeg"
+                android:layout_toRightOf="@+id/descLab4" />
+        </TableRow>
+        <TableRow
+            android:clickable="true"
+            android:id="@+id/row5">
+            <TextView
+                android:id="@+id/dateLab5"
+                android:padding="3dp"
+                android:text="Date: "
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/windDeg"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/date5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/dateLab5"
+                android:padding="3dp" />
+
+            <TextView
+                android:id="@+id/tempLab5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Temp: "
+                android:padding="3dp"
+                android:layout_below="@id/windDeg"
+                android:layout_toRightOf="@+id/date5"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/prevTemp5"
+                android:padding="3dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/windDeg"
+                android:layout_toRightOf="@+id/tempLab5"/>
+
+            <TextView
+                android:id="@+id/descLab5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Details: "
+                android:padding="3dp"
+                android:layout_below="@id/windDeg"
+                android:layout_toRightOf="@+id/prevTemp5"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/desc5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="3dp"
+                android:layout_below="@id/windDeg"
+                android:layout_toRightOf="@+id/descLab5" />
         </TableRow>
     </TableLayout>
 </RelativeLayout>

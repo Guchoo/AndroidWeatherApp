@@ -19,6 +19,7 @@ public class DayForecast {
         public float pressure;
         public float humidity;
         public String date;
+        public String description;
 
 //        public float day;
 //        public float min;

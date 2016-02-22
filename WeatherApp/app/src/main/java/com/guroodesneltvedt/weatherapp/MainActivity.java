@@ -24,6 +24,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.guroodesneltvedt.weatherapp.adapter.DailyForecastPageAdapter;
@@ -52,15 +53,29 @@ public class MainActivity extends AppCompatActivity
     private TextView windDeg;
     private TextView hum;
     private ImageView imgView;
+
     private TextView date;
     private TextView prevTemp;
     private TextView prevDescr;
+    private TextView date2;
+    private TextView prevTemp2;
+    private TextView prevDescr2;
+    private TextView date3;
+    private TextView prevTemp3;
+    private TextView prevDescr3;
+    private TextView date4;
+    private TextView prevTemp4;
+    private TextView prevDescr4;
+    private TextView date5;
+    private TextView prevTemp5;
+    private TextView prevDescr5;
+
 
     private static String forecastDaysNum = "5";
 
     createIconResourceMap createIcon = new createIconResourceMap();
     private SharedPreferences sharePref;
-    private final static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//    private final static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +93,7 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
         createIcon.createIconResourceMap();
         sharePref = getSharedPreferences("cityLabel", 0);
         sharePref = getSharedPreferences("cityLang", 1);
@@ -125,6 +141,18 @@ public class MainActivity extends AppCompatActivity
         date = (TextView) findViewById(R.id.date);
         prevTemp = (TextView) findViewById(R.id.prevTemp);
         prevDescr = (TextView) findViewById(R.id.desc);
+        date2 = (TextView) findViewById(R.id.date2);
+        prevTemp2 = (TextView) findViewById(R.id.prevTemp2);
+        prevDescr2 = (TextView) findViewById(R.id.desc2);
+        date3 = (TextView) findViewById(R.id.date3);
+        prevTemp3 = (TextView) findViewById(R.id.prevTemp3);
+        prevDescr3 = (TextView) findViewById(R.id.desc3);
+        date4 = (TextView) findViewById(R.id.date4);
+        prevTemp4 = (TextView) findViewById(R.id.prevTemp4);
+        prevDescr4 = (TextView) findViewById(R.id.desc4);
+        date5 = (TextView) findViewById(R.id.date5);
+        prevTemp5 = (TextView) findViewById(R.id.prevTemp5);
+        prevDescr5 = (TextView) findViewById(R.id.desc5);
 
         JSONWeatherTask task = new JSONWeatherTask();
         task.execute(new String[]{city});
@@ -156,9 +184,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
@@ -192,10 +217,10 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         getWeather(city, lang);
-//        shareEdit.putString("city", city);
-//        shareEdit.commit();
-//        shareEdit.putString("cityLang", lang);
-//        shareEdit.commit();
+        shareEdit.putString("city", city);
+        shareEdit.commit();
+        shareEdit.putString("cityLang", lang);
+        shareEdit.commit();
         return true;
     }
 
@@ -268,13 +293,33 @@ public class MainActivity extends AppCompatActivity
         protected void onPostExecute(WeatherForecast forecastWeather) {
             super.onPostExecute(forecastWeather);
 
-            String myString = "" + forecastWeather.daysForecast.get(0).forecastTemp.date;
-            String dateString = myString.substring(5, 10);
+            String date_1 = "" + forecastWeather.daysForecast.get(0).forecastTemp.date;
+            String d1 = date_1.substring(5, 13);
+            String date_2 = "" + forecastWeather.daysForecast.get(1).forecastTemp.date;
+            String d2 = date_2.substring(5, 13);
+            String date_3 = "" + forecastWeather.daysForecast.get(2).forecastTemp.date;
+            String d3 = date_3.substring(5, 13);
+            String date_4 = "" + forecastWeather.daysForecast.get(3).forecastTemp.date;
+            String d4 = date_4.substring(5, 13);
+            String date_5 = "" + forecastWeather.daysForecast.get(4).forecastTemp.date;
+            String d5 = date_5.substring(5, 13);
 
-
-            date.setText(dateString);
+            date.setText(d1 + "h");
             prevTemp.setText("" + Math.round((forecastWeather.daysForecast.get(0).forecastTemp.temp - 273.15))  + "\u00b0" + "C");
-            prevDescr.setText("" + forecastWeather.currentConditionForecast.getDescr());
+            prevDescr.setText("" + forecastWeather.daysForecast.get(0).forecastTemp.description);
+            date2.setText(d2 + "h");
+            prevTemp2.setText("" + Math.round((forecastWeather.daysForecast.get(1).forecastTemp.temp - 273.15))  + "\u00b0" + "C");
+            prevDescr2.setText("" + forecastWeather.daysForecast.get(1).forecastTemp.description);
+            date3.setText(d3 + "h");
+            prevTemp3.setText("" + Math.round((forecastWeather.daysForecast.get(2).forecastTemp.temp - 273.15))  + "\u00b0" + "C");
+            prevDescr3.setText("" + forecastWeather.daysForecast.get(2).forecastTemp.description);
+            date4.setText(d4 + "h");
+            prevTemp4.setText("" + Math.round((forecastWeather.daysForecast.get(3).forecastTemp.temp - 273.15))  + "\u00b0" + "C");
+            prevDescr4.setText("" + forecastWeather.daysForecast.get(3).forecastTemp.description);
+            date5.setText(d5 + "h");
+            prevTemp5.setText("" + Math.round((forecastWeather.daysForecast.get(4).forecastTemp.temp - 273.15))  + "\u00b0" + "C");
+            prevDescr5.setText("" + forecastWeather.daysForecast.get(4).forecastTemp.description);
+
 
         }
     }
