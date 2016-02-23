@@ -14,7 +14,7 @@
     android:gravity="top"
     android:background="#fbf9f9"
     android:id="@+id/rl"
-    android:visibility="invisible">
+    android:visibility="visible">
 
     <RelativeLayout
         android:id="@+id/top"
@@ -30,19 +30,21 @@
 
     <ImageView
         android:id="@+id/condIcon"
-        android:layout_width="80px"
-        android:layout_height="80px"
-        android:layout_alignParentLeft="true"
+        android:layout_width="200px"
+        android:layout_height="200px"
         android:icon="@drawable/weather_default"
-        android:layout_alignLeft="@id/cityText"
-        android:background="#b9b9b9" />
+        android:background="#b9b9b9"
+        android:layout_below="@+id/temp"
+        android:layout_toRightOf="@+id/cityText"
+        android:layout_toEndOf="@+id/cityText"
+        android:layout_marginLeft="3dp"
+        android:layout_marginStart="3dp" />
 
     <TextView
         android:id="@+id/condDescr"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/condIcon"
-        android:layout_alignLeft="@id/condIcon"
+        android:layout_below="@id/cityText"
         android:textSize="20sp"
         android:paddingTop="20dp"/>
 

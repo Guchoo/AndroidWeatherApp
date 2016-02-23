@@ -36,7 +36,7 @@ public class DayForecastFragment extends Fragment {
 
             TextView tempView = (TextView) v.findViewById(R.id.temp);
             TextView descView = (TextView) v.findViewById(R.id.condDescr);
-            tempView.setText( (int) (dayForecast.forecastTemp.temp_min - 275.15) + "-" + (int) (dayForecast.forecastTemp.temp_max - 275.15) );
+            tempView.setText( (int) (dayForecast.forecast.temp_min - 275.15) + "-" + (int) (dayForecast.forecast.temp_max - 275.15) );
             descView.setText(dayForecast.weather.currentCondition.getDescr());
             //iconWeather = (ImageView) v.findViewById(R.id.forCondIcon);
             // Now we retrieve the weather icon

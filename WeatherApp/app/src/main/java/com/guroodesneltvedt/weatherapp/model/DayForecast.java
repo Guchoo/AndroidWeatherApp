@@ -1,5 +1,6 @@
 package com.guroodesneltvedt.weatherapp.model;
 
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -9,10 +10,10 @@ import java.util.Date;
 public class DayForecast {
     private static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
     public Weather weather = new Weather();
-    public ForecastTemp forecastTemp = new ForecastTemp();
+    public Forecast forecast = new Forecast();
     public long timestamp;
 
-    public class ForecastTemp {
+    public class Forecast {
         public float temp;
         public float temp_min;
         public float temp_max;
@@ -20,6 +21,7 @@ public class DayForecast {
         public float humidity;
         public String date;
         public String description;
+        public String icon;
 
 //        public float day;
 //        public float min;

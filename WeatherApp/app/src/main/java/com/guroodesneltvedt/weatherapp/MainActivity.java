@@ -1,15 +1,12 @@
 package com.guroodesneltvedt.weatherapp;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
 import android.text.SpannableString;
 import android.text.style.ImageSpan;
 import android.view.View;
@@ -23,24 +20,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.guroodesneltvedt.weatherapp.adapter.DailyForecastPageAdapter;
-import com.guroodesneltvedt.weatherapp.model.DayForecast;
 import com.guroodesneltvedt.weatherapp.model.Weather;
 import com.guroodesneltvedt.weatherapp.model.WeatherForecast;
 
 import org.json.JSONException;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -252,8 +237,8 @@ public class MainActivity extends AppCompatActivity
                 Bitmap img = BitmapFactory.decodeByteArray(weather.iconData, 0, weather.iconData.length);
                 imgView.setImageBitmap(img);
             } else {
-                Integer test = createIcon.convertOpenWeatherIconIdToResourceIconId(weather.currentCondition.getIcon());
-                imgView.setImageResource(test);
+                Integer icon = createIcon.convertOpenWeatherIconIdToResourceIconId(weather.currentCondition.getIcon());
+                imgView.setImageResource(icon);
             }
 
             cityText.setText(weather.location.getCity() + "," + weather.location.getCountry());
@@ -277,8 +262,8 @@ public class MainActivity extends AppCompatActivity
 
             try {
                 forecast = JSONWeatherParser.getForecastWeather(data);
-                System.out.println("Weather [" + forecast + "]");
                 // Let's retrieve the icon
+                System.out.println("Weather [" + forecast + "]");
                 //weather.iconData = ( (new WeatherHttpClient()).getImage(weather.currentCondition.getIcon()));
 
             } catch (JSONException e) {
@@ -293,32 +278,35 @@ public class MainActivity extends AppCompatActivity
         protected void onPostExecute(WeatherForecast forecastWeather) {
             super.onPostExecute(forecastWeather);
 
-            String date_1 = "" + forecastWeather.daysForecast.get(0).forecastTemp.date;
+//            Integer test = createIcon.convertOpenWeatherIconIdToResourceIconId(forecastWeather.daysForecast.get(0).forecast.icon);
+//            imgView.setImageResource(test);
+
+            String date_1 = "" + forecastWeather.daysForecast.get(0).forecast.date;
             String d1 = date_1.substring(5, 13);
-            String date_2 = "" + forecastWeather.daysForecast.get(1).forecastTemp.date;
+            String date_2 = "" + forecastWeather.daysForecast.get(1).forecast.date;
             String d2 = date_2.substring(5, 13);
-            String date_3 = "" + forecastWeather.daysForecast.get(2).forecastTemp.date;
+            String date_3 = "" + forecastWeather.daysForecast.get(2).forecast.date;
             String d3 = date_3.substring(5, 13);
-            String date_4 = "" + forecastWeather.daysForecast.get(3).forecastTemp.date;
+            String date_4 = "" + forecastWeather.daysForecast.get(3).forecast.date;
             String d4 = date_4.substring(5, 13);
-            String date_5 = "" + forecastWeather.daysForecast.get(4).forecastTemp.date;
+            String date_5 = "" + forecastWeather.daysForecast.get(4).forecast.date;
             String d5 = date_5.substring(5, 13);
 
             date.setText(d1 + "h");
-            prevTemp.setText("" + Math.round((forecastWeather.daysForecast.get(0).forecastTemp.temp - 273.15))  + "\u00b0" + "C");
-            prevDescr.setText("" + forecastWeather.daysForecast.get(0).forecastTemp.description);
+            prevTemp.setText("" + Math.round((forecastWeather.daysForecast.get(0).forecast.temp - 273.15))  + "\u00b0" + "C");
+            prevDescr.setText("" + forecastWeather.daysForecast.get(0).forecast.description);
             date2.setText(d2 + "h");
-            prevTemp2.setText("" + Math.round((forecastWeather.daysForecast.get(1).forecastTemp.temp - 273.15))  + "\u00b0" + "C");
-            prevDescr2.setText("" + forecastWeather.daysForecast.get(1).forecastTemp.description);
+            prevTemp2.setText("" + Math.round((forecastWeather.daysForecast.get(1).forecast.temp - 273.15))  + "\u00b0" + "C");
+            prevDescr2.setText("" + forecastWeather.daysForecast.get(1).forecast.description);
             date3.setText(d3 + "h");
-            prevTemp3.setText("" + Math.round((forecastWeather.daysForecast.get(2).forecastTemp.temp - 273.15))  + "\u00b0" + "C");
-            prevDescr3.setText("" + forecastWeather.daysForecast.get(2).forecastTemp.description);
+            prevTemp3.setText("" + Math.round((forecastWeather.daysForecast.get(2).forecast.temp - 273.15))  + "\u00b0" + "C");
+            prevDescr3.setText("" + forecastWeather.daysForecast.get(2).forecast.description);
             date4.setText(d4 + "h");
-            prevTemp4.setText("" + Math.round((forecastWeather.daysForecast.get(3).forecastTemp.temp - 273.15))  + "\u00b0" + "C");
-            prevDescr4.setText("" + forecastWeather.daysForecast.get(3).forecastTemp.description);
+            prevTemp4.setText("" + Math.round((forecastWeather.daysForecast.get(3).forecast.temp - 273.15))  + "\u00b0" + "C");
+            prevDescr4.setText("" + forecastWeather.daysForecast.get(3).forecast.description);
             date5.setText(d5 + "h");
-            prevTemp5.setText("" + Math.round((forecastWeather.daysForecast.get(4).forecastTemp.temp - 273.15))  + "\u00b0" + "C");
-            prevDescr5.setText("" + forecastWeather.daysForecast.get(4).forecastTemp.description);
+            prevTemp5.setText("" + Math.round((forecastWeather.daysForecast.get(4).forecast.temp - 273.15))  + "\u00b0" + "C");
+            prevDescr5.setText("" + forecastWeather.daysForecast.get(4).forecast.description);
 
 
         }
