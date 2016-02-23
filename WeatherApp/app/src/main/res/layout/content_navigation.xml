@@ -14,7 +14,7 @@
     android:gravity="top"
     android:background="#fbf9f9"
     android:id="@+id/rl"
-    android:visibility="visible">
+    android:visibility="invisible">
 
     <RelativeLayout
         android:id="@+id/top"
@@ -30,15 +30,12 @@
 
     <ImageView
         android:id="@+id/condIcon"
-        android:layout_width="200px"
-        android:layout_height="200px"
+        android:layout_width="150px"
+        android:layout_height="150px"
         android:icon="@drawable/weather_default"
         android:background="#b9b9b9"
-        android:layout_below="@+id/temp"
-        android:layout_toRightOf="@+id/cityText"
-        android:layout_toEndOf="@+id/cityText"
-        android:layout_marginLeft="3dp"
-        android:layout_marginStart="3dp" />
+        android:layout_toLeftOf="@+id/cityText"
+        android:paddingRight="5dp"/>
 
     <TextView
         android:id="@+id/condDescr"
@@ -133,7 +130,8 @@
         <TableRow
             android:clickable="true"
             android:id="@+id/row1"
-            android:onClick="onRow1Click">
+            android:onClick="onRow1Click"
+            android:paddingBottom="15dp">
             <TextView
                 android:id="@+id/dateLab"
                 android:padding="3dp"
@@ -188,7 +186,8 @@
         </TableRow>
         <TableRow
             android:clickable="true"
-            android:id="@+id/row2">
+            android:id="@+id/row2"
+            android:paddingBottom="15dp">
             <TextView
                 android:id="@+id/dateLab2"
                 android:padding="3dp"
@@ -243,7 +242,8 @@
         </TableRow>
         <TableRow
             android:clickable="true"
-            android:id="@+id/row3">
+            android:id="@+id/row3"
+            android:paddingBottom="15dp">
             <TextView
                 android:id="@+id/dateLab3"
                 android:padding="3dp"
@@ -298,7 +298,8 @@
         </TableRow>
         <TableRow
             android:clickable="true"
-            android:id="@+id/row4">
+            android:id="@+id/row4"
+            android:paddingBottom="15dp">
             <TextView
                 android:id="@+id/dateLab4"
                 android:padding="3dp"
@@ -353,7 +354,8 @@
         </TableRow>
         <TableRow
             android:clickable="true"
-            android:id="@+id/row5">
+            android:id="@+id/row5"
+            android:paddingBottom="15dp">
             <TextView
                 android:id="@+id/dateLab5"
                 android:padding="3dp"

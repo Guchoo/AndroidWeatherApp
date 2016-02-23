@@ -21,9 +21,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.guroodesneltvedt.weatherapp.model.DayForecast;
 import com.guroodesneltvedt.weatherapp.model.Weather;
 import com.guroodesneltvedt.weatherapp.model.WeatherForecast;
 
@@ -59,8 +61,6 @@ public class MainActivity extends AppCompatActivity
 
     private static String forecastDaysNum = "5";
 
-    private TableRow tr = (TableRow) findViewById(R.id.row1);
-
     createIconResourceMap createIcon = new createIconResourceMap();
     private SharedPreferences sharePref;
 //    private final static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -72,6 +72,8 @@ public class MainActivity extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        TableLayout tablelay = (TableLayout) findViewById(R.id.table);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -95,14 +97,33 @@ public class MainActivity extends AppCompatActivity
             startInfo();
         }
 
+        for(int i = 0, j = tablelay.getChildCount(); i < j; i++) {
+            View view = tablelay.getChildAt(i);
+            if (view instanceof TableRow) {
+                TableRow row = (TableRow) view;
+                row.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int f = findViewById(R.id.row1).getId();
+                        createDialogBox(f);
+                    }
+                });
+            }
+        }
+
     }
 
-    public void createDialogBox(){
+    public void createDialogBox(int i){
+//        Integer test = createIcon.convertOpenWeatherIconIdToResourceIconId(.daysForecast.get(0).forecast.icon);
+//        ImageSpan imagespan = new ImageSpan(this, R.drawable.ic_menu_24dp);
+//        str.setSpan(imagespan, index, index + 1, ImageSpan.ALIGN_BASELINE);
+
         new AlertDialog.Builder(this)
-                .setTitle("How to start")
+                .setTitle("Details")
                 .setMessage("")
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
+
                     }
                 })
                 .setIcon(android.R.drawable.ic_dialog_info)
@@ -296,9 +317,6 @@ public class MainActivity extends AppCompatActivity
         protected void onPostExecute(WeatherForecast forecastWeather) {
             super.onPostExecute(forecastWeather);
 
-//            Integer test = createIcon.convertOpenWeatherIconIdToResourceIconId(forecastWeather.daysForecast.get(0).forecast.icon);
-//            imgView.setImageResource(test);
-
             String date_1 = "" + forecastWeather.daysForecast.get(0).forecast.date;
             String d1 = date_1.substring(5, 13);
             String date_2 = "" + forecastWeather.daysForecast.get(1).forecast.date;
@@ -325,8 +343,6 @@ public class MainActivity extends AppCompatActivity
             date5.setText(d5 + "h");
             prevTemp5.setText("" + Math.round((forecastWeather.daysForecast.get(4).forecast.temp - 273.15))  + "\u00b0" + "C");
             prevDescr5.setText("" + forecastWeather.daysForecast.get(4).forecast.description);
-
-
         }
     }
 }
