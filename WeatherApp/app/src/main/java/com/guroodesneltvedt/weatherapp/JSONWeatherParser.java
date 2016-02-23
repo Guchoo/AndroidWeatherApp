@@ -96,28 +96,28 @@ public class JSONWeatherParser {
             // Temp is an object
             JSONObject jTempObj = jDayForecast.getJSONObject("main");
 
-            df.forecastTemp.temp = (float) jTempObj.getDouble("temp");
-            df.forecastTemp.temp_min = (float) jTempObj.getDouble("temp_min");
-            df.forecastTemp.temp_max = (float) jTempObj.getDouble("temp_max");
-            df.forecastTemp.pressure = (float) jTempObj.getDouble("pressure");
-            df.forecastTemp.humidity = (float) jTempObj.getDouble("humidity");
+            df.forecast.temp = (float) jTempObj.getDouble("temp");
+            df.forecast.temp_min = (float) jTempObj.getDouble("temp_min");
+            df.forecast.temp_max = (float) jTempObj.getDouble("temp_max");
+            df.forecast.pressure = (float) jTempObj.getDouble("pressure");
+            df.forecast.humidity = (float) jTempObj.getDouble("humidity");
 
 
             // Pressure & Humidity
-            df.weather.currentCondition.setPressure(df.forecastTemp.pressure);
-            df.weather.currentCondition.setHumidity(df.forecastTemp.humidity);
+            df.weather.currentCondition.setPressure(df.forecast.pressure);
+            df.weather.currentCondition.setHumidity(df.forecast.humidity);
 
             // ...and now the weather
             JSONArray jWeatherArr = jDayForecast.getJSONArray("weather");
             JSONObject jWeatherObj = jWeatherArr.getJSONObject(0);
-            df.weather.currentCondition.setWeatherId(getInt("id", jWeatherObj));
-            df.weather.currentCondition.setDescr(getString("description", jWeatherObj));
-            df.weather.currentCondition.setCondition(getString("main", jWeatherObj));
-            df.weather.currentCondition.setIcon(getString("icon", jWeatherObj));
+//            df.weather.currentCondition.setWeatherId(getInt("id", jWeatherObj));
+//            df.weather.currentCondition.setDescr(getString("description", jWeatherObj));
+//            df.weather.currentCondition.setCondition(getString("main", jWeatherObj));
+//            df.weather.currentCondition.setIcon(getString("icon", jWeatherObj));
 
-            df.forecastTemp.date = jDayForecast.getString("dt_txt");
-//            forecast.currentConditionForecast.setDescr(getString("description", jWeatherObj));
-            df.forecastTemp.description = jWeatherObj.getString("description");
+            df.forecast.date = jDayForecast.getString("dt_txt");
+            df.forecast.description = jWeatherObj.getString("description");
+			df.forecast.icon = jWeatherObj.getString("icon");
 
             forecast.addForecast(df);
         }
