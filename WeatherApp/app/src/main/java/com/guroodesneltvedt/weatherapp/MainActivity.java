@@ -1,6 +1,7 @@
 package com.guroodesneltvedt.weatherapp;
 
 import android.app.AlertDialog;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,9 +10,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewPager;
 import android.text.SpannableString;
 import android.text.style.ImageSpan;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -21,6 +24,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
@@ -70,8 +74,9 @@ public class MainActivity extends AppCompatActivity
     private TextView prevTemp5;
     private TextView prevDescr5;
 
-
     private static String forecastDaysNum = "5";
+
+    private TableRow tr = (TableRow) findViewById(R.id.row1);
 
     createIconResourceMap createIcon = new createIconResourceMap();
     private SharedPreferences sharePref;
@@ -106,6 +111,25 @@ public class MainActivity extends AppCompatActivity
         } else {
             startInfo();
         }
+
+        tr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createDialogBox();
+            }
+        });
+    }
+
+    public void createDialogBox(){
+        new AlertDialog.Builder(this)
+                .setTitle("How to start")
+                .setMessage("")
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_info)
+                .show();
     }
 
     public void startInfo() {
@@ -125,6 +149,8 @@ public class MainActivity extends AppCompatActivity
                 .setIcon(android.R.drawable.ic_dialog_info)
                 .show();
     }
+
+
 
 
     public void getWeather(String city, String lang) {
