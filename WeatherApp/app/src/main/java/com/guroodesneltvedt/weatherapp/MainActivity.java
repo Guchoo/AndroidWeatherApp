@@ -276,15 +276,18 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_stavanger) {
             city = "Stavanger,NO";
         }
+        else{
+
+        }
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         getWeather(city, lang);
-//        shareEdit.putString("city", city);
-//        shareEdit.commit();
-//        shareEdit.putString("cityLang", lang);
-//        shareEdit.commit();
+        shareEdit.putString("city", city);
+        shareEdit.commit();
+        shareEdit.putString("cityLang", lang);
+        shareEdit.commit();
         return true;
 
     }
