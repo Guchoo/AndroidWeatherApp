@@ -1,30 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <include layout="@layout/nav_header_navigation" />
     <group android:checkableBehavior="single">
-        <!--<item-->
-            <!--android:id="@+id/nav_location"-->
-            <!--android:title="Location"-->
-            <!--android:icon="@drawable/ic_menu_location" />-->
         <item
             android:id="@+id/nav_grimstad"
             android:title="Grimstad" />
-            <!--android:icon="@drawable/ic_menu_search"-->
 
         <item
             android:id="@+id/nav_oslo"
             android:title="Oslo" />
-            <!--android:icon="@drawable/ic_menu_gallery"-->
-            <!--android:title="Gallery" />-->
         <item
             android:id="@+id/nav_bergen"
             android:title="Bergen" />
-            <!--android:icon="@drawable/ic_menu_slideshow"-->
-            <!--android:title="Slideshow" />-->
+        <item
+            android:id="@+id/nav_stavanger"
+            android:title="Stavanger" />
         <item
             android:id="@+id/nav_london"
             android:title="London" />
-            <!--android:icon="@drawable/ic_menu_manage"-->
-            <!--android:title="Tools" />-->
+        <item
+            android:id="@+id/nav_berlin"
+            android:title="Berlin" />
+
     </group>
 </menu>

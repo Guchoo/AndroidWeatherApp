@@ -110,10 +110,6 @@ public class JSONWeatherParser {
             // ...and now the weather
             JSONArray jWeatherArr = jDayForecast.getJSONArray("weather");
             JSONObject jWeatherObj = jWeatherArr.getJSONObject(0);
-//            df.weather.currentCondition.setWeatherId(getInt("id", jWeatherObj));
-//            df.weather.currentCondition.setDescr(getString("description", jWeatherObj));
-//            df.weather.currentCondition.setCondition(getString("main", jWeatherObj));
-//            df.weather.currentCondition.setIcon(getString("icon", jWeatherObj));
 
             df.forecast.date = jDayForecast.getString("dt_txt");
             df.forecast.description = jWeatherObj.getString("description");

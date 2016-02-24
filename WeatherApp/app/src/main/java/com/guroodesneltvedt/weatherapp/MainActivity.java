@@ -1,15 +1,23 @@
 package com.guroodesneltvedt.weatherapp;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
 import android.text.SpannableString;
 import android.text.style.ImageSpan;
+import android.view.KeyEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -19,7 +27,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -30,6 +42,8 @@ import com.guroodesneltvedt.weatherapp.model.Weather;
 import com.guroodesneltvedt.weatherapp.model.WeatherForecast;
 
 import org.json.JSONException;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -59,11 +73,12 @@ public class MainActivity extends AppCompatActivity
     private TextView prevTemp5;
     private TextView prevDescr5;
 
-    private static String forecastDaysNum = "5";
+    private ArrayList iconList = new ArrayList();
 
+    private static String forecastDaysNum = "5";
+    private LocationManager locManager;
     createIconResourceMap createIcon = new createIconResourceMap();
     private SharedPreferences sharePref;
-//    private final static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +99,8 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
         createIcon.createIconResourceMap();
         sharePref = getSharedPreferences("cityLabel", 0);
         sharePref = getSharedPreferences("cityLang", 1);
@@ -99,36 +116,58 @@ public class MainActivity extends AppCompatActivity
 
         for(int i = 0, j = tablelay.getChildCount(); i < j; i++) {
             View view = tablelay.getChildAt(i);
+            final int f = i;
             if (view instanceof TableRow) {
                 TableRow row = (TableRow) view;
                 row.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        int f = findViewById(R.id.row1).getId();
                         createDialogBox(f);
                     }
                 });
             }
         }
+        //Get content from search.
+//        edt.setOnEditorActionListener(new TextView.OnEditorActionListener(){
+//            @Override
+//            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+//                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+//                    JSONWeatherTask task = new JSONWeatherTask();
+//                    String pattern = edt.getEditableText().toString();
+//                    task.execute(new String[]{pattern});
+//
+//                    JSONForecastWeatherTask task2 = new JSONForecastWeatherTask();
+//                    task2.execute(new String[]{pattern});
+//                    return true;
+//                }
+//                return false;
+//            }
+//        });
+
+
 
     }
 
     public void createDialogBox(int i){
-//        Integer test = createIcon.convertOpenWeatherIconIdToResourceIconId(.daysForecast.get(0).forecast.icon);
-//        ImageSpan imagespan = new ImageSpan(this, R.drawable.ic_menu_24dp);
-//        str.setSpan(imagespan, index, index + 1, ImageSpan.ALIGN_BASELINE);
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.details_dialog);
+        dialog.setTitle("More details: ");
+        String iconString = (String) iconList.get(i);
+        ImageView iv = (ImageView) dialog.findViewById(R.id.imageDetail);
 
-        new AlertDialog.Builder(this)
-                .setTitle("Details")
-                .setMessage("")
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
+        Integer intIcon = createIcon.convertOpenWeatherIconIdToResourceIconId(iconString);
+        iv.setImageResource(intIcon);
 
-                    }
-                })
-                .setIcon(android.R.drawable.ic_dialog_info)
-                .show();
-    }
+        Button dialogButton = (Button) dialog.findViewById(R.id.dialogButtonOK);
+        dialogButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+}
 
     public void startInfo() {
         String text = "Select city in the menu by clicking @";
@@ -147,9 +186,6 @@ public class MainActivity extends AppCompatActivity
                 .setIcon(android.R.drawable.ic_dialog_info)
                 .show();
     }
-
-
-
 
     public void getWeather(String city, String lang) {
 
@@ -201,7 +237,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.navigation, menu);
         return true;
     }
@@ -236,16 +271,22 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_london) {
             city = "London,UK";
             lang = "en";
+        } else if (id == R.id.nav_berlin) {
+            city = "Berlin,DE";
+        } else if (id == R.id.nav_stavanger) {
+            city = "Stavanger,NO";
         }
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         getWeather(city, lang);
-        shareEdit.putString("city", city);
-        shareEdit.commit();
-        shareEdit.putString("cityLang", lang);
-        shareEdit.commit();
+//        shareEdit.putString("city", city);
+//        shareEdit.commit();
+//        shareEdit.putString("cityLang", lang);
+//        shareEdit.commit();
         return true;
+
     }
 
     private class JSONWeatherTask extends AsyncTask<String, Void, Weather> {
@@ -316,7 +357,12 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(WeatherForecast forecastWeather) {
             super.onPostExecute(forecastWeather);
+            iconList.clear();
+            for(int i=0; i< 5; i++){
+                iconList.add(forecastWeather.daysForecast.get(i).forecast.icon);
+            }
 
+            //Should be prettier
             String date_1 = "" + forecastWeather.daysForecast.get(0).forecast.date;
             String d1 = date_1.substring(5, 13);
             String date_2 = "" + forecastWeather.daysForecast.get(1).forecast.date;
@@ -345,4 +391,63 @@ public class MainActivity extends AppCompatActivity
             prevDescr5.setText("" + forecastWeather.daysForecast.get(4).forecast.description);
         }
     }
+    private static Criteria searchProviderCriteria = new Criteria();
+    // Location Criteria
+        static
+    {
+        searchProviderCriteria.setPowerRequirement(Criteria.POWER_LOW);
+        searchProviderCriteria.setAccuracy(Criteria.ACCURACY_COARSE);
+        searchProviderCriteria.setCostAllowed(false);
+    }
+    private boolean checkWriteExternalPermission()
+    {
+        String permission = "android.permission.WRITE_EXTERNAL_STORAGE";
+        int res = checkCallingOrSelfPermission(permission);
+        return (res == PackageManager.PERMISSION_GRANTED);
+    }
+
+    // Get city by GPS or WiFi. Not done.
+//    public void getPosition() {
+//        String provider = locManager.getBestProvider(searchProviderCriteria, true);
+//        checkWriteExternalPermission();
+//        Location loc = locManager.getLastKnownLocation(provider);
+//
+//        if (loc == null) {
+//            // We request another update Location
+//            Log.d("SwA", "Request location");
+//            locManager.requestSingleUpdate(provider, locListener, null);
+//        } else {
+//            JSONWeatherTask task = new JSONWeatherTask();
+//            task.execute(new String[]{loc});
+//        }
+//    }
+//
+//    public LocationListener locListener = new LocationListener() {
+//        @Override
+//        public void onStatusChanged(String provider, int status, Bundle extras) {
+//        }
+//
+//        @Override
+//        public void onProviderEnabled(String provider) {
+//        }
+//
+//        @Override
+//        public void onProviderDisabled(String provider) {
+//        }
+//
+//        @Override
+//        public void onLocationChanged(Location location) {
+//            Log.d("SwA", "Location changed!");
+//            String sLat =   "" + location.getLatitude();
+//            String sLon =  "" + location.getLongitude();
+//            Log.d("SwA", "Lat [" + sLat + "] - sLong [" + sLon + "]");
+//
+//            LocationManager locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+//            checkWriteExternalPermission();
+//            locManager.removeUpdates(locListener);
+//            JSONWeatherTask task = new JSONWeatherTask();
+//            task.execute(new String[]{location});
+//        }
+//    };
+
 }
