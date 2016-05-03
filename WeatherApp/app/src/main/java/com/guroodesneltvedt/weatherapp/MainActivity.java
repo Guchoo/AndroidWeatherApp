@@ -74,6 +74,9 @@ public class MainActivity extends AppCompatActivity
     private TextView prevDescr5;
 
     private ArrayList iconList = new ArrayList();
+    private ArrayList dateList = new ArrayList();
+    private ArrayList prevTempList = new ArrayList();
+    private ArrayList prevDescrList = new ArrayList();
 
     private static String forecastDaysNum = "5";
     private LocationManager locManager;
@@ -363,9 +366,14 @@ public class MainActivity extends AppCompatActivity
             iconList.clear();
             for(int i=0; i< 5; i++){
                 iconList.add(forecastWeather.daysForecast.get(i).forecast.icon);
+                dateList.add("" + forecastWeather.daysForecast.get(i).forecast.date);
+                prevTempList.add("" + Math.round((forecastWeather.daysForecast.get(i).forecast.temp - 273.15))  + "\u00b0" + "C");
+                prevDescrList.add("" + forecastWeather.daysForecast.get(i).forecast.description);
             }
 
-            //Should be prettier
+
+
+            //Should be prettier... Moved to the loop above
             String date_1 = "" + forecastWeather.daysForecast.get(0).forecast.date;
             String d1 = date_1.substring(5, 13);
             String date_2 = "" + forecastWeather.daysForecast.get(1).forecast.date;
